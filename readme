@@ -1,0 +1,39 @@
+Quasar Take Load tool
+
+Usage: ./qtl <block_device_name_from_/proc/diskstats>
+
+The tool prints out consistent 1-second load samples and targeted for using with HTTP-query stress-array (quasar).
+
+Printed statistics:
+
+[%,  Load]
+First number is the instant load from /proc/loadavg expressed as percentage of available CPU cores. 100% means
+that instant number of processes in R state (running+runnable) equals to the number of CPU cores. Note, that
+D state is not counted here as <man proc> would suggest. The second number (after /) is the total number of
+scheduling entities on the system.
+
+[kBread]
+Number of kilobytes read from the block_device (taken from /proc/diskstats) during the second represented. The
+bytes in question are physically transferred bytes (from the device driver to kernel buffers).
+
+[kBwritten]
+Same as kBread but opposite direction.
+
+[%timeReading]
+Percentage of time spent in the device driver reading (as relation to the real time). This reflects parallelism
+of the operations and may get to thousands.
+
+[%timeWriting]
+Same as %timeReading but for writing.
+
+[%CPUtimeIO]
+This is /proc/stat indicator of CPU time spent in I/O (threads' D state) related to the number of CPU cores and
+real time elapsed, expressed per cent. 100% here means that all CPU cycles are consumed for moving data to-and-
+from block devices (not the only one given as the argument to the tool). 100% would be practically unreachable.
+
+The print-out interval of 1 second may be changed at compile time (PERIOD definition) which might be dubious idea.
+
+LICENSE:
+BSD 2 Clause
+(c) 2015, Vitaly Zuevsky
+
